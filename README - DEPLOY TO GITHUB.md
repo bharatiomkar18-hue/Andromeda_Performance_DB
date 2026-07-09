@@ -2,6 +2,10 @@
 
 This package publishes the dashboard as a static HTML page.
 
+The page now tries to load live shared data from the Andromeda Google Sheet
+Backup first. If that shared source is unavailable, it still opens with the
+embedded local data from the last packaged dashboard.
+
 ## What To Upload
 
 Upload these files to the GitHub repository root:
@@ -30,7 +34,19 @@ https://docs.github.com/en/pages/quickstart
 
 ## Daily Refresh
 
-After the Andromeda BAT run:
+For daily data refresh, no GitHub upload is required if the Apps Script has
+been updated with the latest `AndromedaBaseSync.gs` and the BAT run successfully
+updates the shared Google Sheet.
+
+After any teammate runs Andromeda successfully:
+
+1. The BAT updates Google Sheet `Base`, `Backup`, and `Overall Report`.
+2. The deployed dashboard reads the latest hub-date rows from `Backup`.
+3. KPI tracking drilldowns query `Overall Report` only when a block is clicked.
+
+Upload `index.html` again only when the dashboard design/code changes.
+
+To refresh the deployed HTML after a dashboard code change:
 
 1. Open `C:\Andromeda\Dashboard`.
 2. Confirm `Andromeda_Dashboard.html` is updated.
@@ -43,4 +59,7 @@ On the Andromeda laptop, you can use `UPDATE FROM ANDROMEDA DASHBOARD.bat` to co
 
 ## Important Security Note
 
-The dashboard can include latest tracking-ID drilldown data from `OverallReport.csv`. Do not publish this in a public repository unless the data is approved for public viewing.
+Keep the GitHub repository private/internal. The dashboard can read shared
+summary data and tracking-ID drilldown data through the Apps Script web app, so
+the Apps Script deployment should also be restricted to approved ElasticRun
+users.
